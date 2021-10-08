@@ -25,25 +25,31 @@ let x = document.getElementById("x");
 let y = document.getElementById("y");
 let z = document.getElementById("z");
 let letterLines = document.getElementById("letterLines");
+let winLoseDiv = document.getElementById("winOrLose");
+let wrongGuessesDiv = document.getElementById("wrongGuesses");
 
 // Get a random word from a list
 
 let wordList = ["First word", "Second Word", "Third Word"];
 
-function getRandomWord(list) {
+function getRandomWordFromList(list) {
   return list[Math.floor(Math.random() * list.length)];
 }
 
-let word = getRandomWord(wordList);
-let chosenWord = word.toLowerCase();
-
-// Display # of lines based on letters in word chosen
-
-let arrayOfLetters = chosenWord.split("");
-console.log(arrayOfLetters);
+let chosenWord = getRandomWordFromList(wordList);
+let word = chosenWord.toLowerCase();
+let arrayOfLetters = word.split("");
 let arrayOfLines = [];
 
-function convertLettersToLinesArray(arrayOfCharacters) {
+function displayLinesArray(arrayOfLines) {
+  // Must do this so that can put updated array of lines into div at each guess
+  letterLines.innerHTML = "";
+  for (i = 0; i < arrayOfLines.length; i++) {
+    letterLines.innerHTML += arrayOfLines[i];
+  }
+}
+
+function createLinesArrayFromLettersArray(arrayOfCharacters) {
   for (i = 0; i < arrayOfCharacters.length; i++) {
     arrayOfLines.push(" ");
     if (arrayOfCharacters[i] == " ") {
@@ -52,28 +58,106 @@ function convertLettersToLinesArray(arrayOfCharacters) {
       arrayOfLines.push("_");
     }
   }
-  console.log(arrayOfLines);
+  // Once created, show
   displayLinesArray(arrayOfLines);
 }
-convertLettersToLinesArray(arrayOfLetters);
-
-function displayLinesArray(arrayOfLines) {
-  letterLines.innerHTML = "";
-  for (i = 0; i < arrayOfLines.length; i++) {
-    letterLines.innerHTML += arrayOfLines[i];
-  }
-}
+// Creates upon page load
+createLinesArrayFromLettersArray(arrayOfLetters);
 
 function removeSpacesFromArrayOfLines(arrayOfLines) {
   for (i = 0; i < arrayOfLines.length; i++) {
     if (arrayOfLines[i] == " ") {
-      //remove it from array of lines somehow
       arrayOfLines.splice(i, 1);
     }
   }
 }
-removeSpacesFromArrayOfLines(arrayOfLines);
-console.log(arrayOfLines);
+
+function addSpacesBackIn(array) {
+  let updatedArray = [];
+  for (i = 0; i < array.length; i++) {
+    updatedArray.push(array[i]);
+    updatedArray.push(" ");
+  }
+  arrayOfLines = updatedArray;
+  console.log(arrayOfLines);
+}
+
+function showLetter(arrayOfCharacters, letterGuessed) {
+  let count = 0;
+  removeSpacesFromArrayOfLines(arrayOfLines);
+  for (i = 0; i < arrayOfCharacters.length; i++) {
+    count++;
+    if (arrayOfCharacters[i] != letterGuessed) {
+      // do nothing to array of lines
+    } else if (arrayOfCharacters[i] == letterGuessed) {
+      // find index of where in array of characters and overwrite array of lines at that index
+      let index = count - 1;
+      arrayOfLines[index] = letterGuessed;
+    }
+  }
+  addSpacesBackIn(arrayOfLines);
+}
+
+let wrongCount = 0;
+function showYouLoseMessage() {
+  winLoseDiv.innerHTML = "Too many wrong guesses, you lose!!";
+}
+
+function showYouWinMessage() {
+  winLoseDiv.innerHTML = "You won!!";
+}
+
+function showWrongGuessCount() {
+  wrongGuessesDiv.innerHTML = "Incorrect Guesses: " + wrongCount + "/3";
+}
+showWrongGuessCount();
+
+function onClick() {
+  let currentClick = event.target;
+  let userGuess = currentClick.innerHTML;
+
+  if (arrayOfLetters.includes(userGuess)) {
+    showLetter(arrayOfLetters, userGuess);
+    displayLinesArray(arrayOfLines);
+  } else if (!arrayOfLetters.includes(userGuess)) {
+    wrongCount = wrongCount + 1;
+    if (wrongCount == 3) {
+      showYouLoseMessage();
+    }
+    showWrongGuessCount();
+  }
+
+  if (!arrayOfLines.includes("_")) {
+    showYouWinMessage();
+  }
+}
+
+a.addEventListener("click", onClick);
+b.addEventListener("click", onClick);
+c.addEventListener("click", onClick);
+d.addEventListener("click", onClick);
+e.addEventListener("click", onClick);
+f.addEventListener("click", onClick);
+g.addEventListener("click", onClick);
+h.addEventListener("click", onClick);
+ii.addEventListener("click", onClick);
+j.addEventListener("click", onClick);
+k.addEventListener("click", onClick);
+l.addEventListener("click", onClick);
+m.addEventListener("click", onClick);
+n.addEventListener("click", onClick);
+o.addEventListener("click", onClick);
+p.addEventListener("click", onClick);
+q.addEventListener("click", onClick);
+r.addEventListener("click", onClick);
+s.addEventListener("click", onClick);
+t.addEventListener("click", onClick);
+u.addEventListener("click", onClick);
+v.addEventListener("click", onClick);
+w.addEventListener("click", onClick);
+x.addEventListener("click", onClick);
+y.addEventListener("click", onClick);
+z.addEventListener("click", onClick);
 
 // Display list of alphabet in buttons
 
@@ -105,57 +189,3 @@ let alphabet = [
   "y",
   "z",
 ];
-
-function showLetter(arrayOfCharacters, letterGuessed) {
-  let count = 0;
-
-  console.log(arrayOfLines);
-  for (i = 0; i < arrayOfCharacters.length; i++) {
-    count++;
-    if (arrayOfCharacters[i] != letterGuessed) {
-      // do nothing to array of lines
-    } else if (arrayOfCharacters[i] == letterGuessed) {
-      // find index of where in array of characters and overwrite array of lines at that index
-      let index = count - 1;
-      arrayOfLines[index] = letterGuessed;
-    }
-  }
-  console.log(count);
-}
-
-function onClick() {
-  let currentClick = event.target;
-  let userGuess = currentClick.innerHTML;
-
-  if (arrayOfLetters.includes(userGuess)) {
-    showLetter(arrayOfLetters, userGuess);
-    displayLinesArray(arrayOfLines);
-  }
-}
-
-a.addEventListener("click", onClick);
-b.addEventListener("click", onClick);
-c.addEventListener("click", onClick);
-d.addEventListener("click", onClick);
-e.addEventListener("click", onClick);
-f.addEventListener("click", onClick);
-g.addEventListener("click", onClick);
-h.addEventListener("click", onClick);
-ii.addEventListener("click", onClick);
-j.addEventListener("click", onClick);
-k.addEventListener("click", onClick);
-l.addEventListener("click", onClick);
-m.addEventListener("click", onClick);
-n.addEventListener("click", onClick);
-o.addEventListener("click", onClick);
-p.addEventListener("click", onClick);
-q.addEventListener("click", onClick);
-r.addEventListener("click", onClick);
-s.addEventListener("click", onClick);
-t.addEventListener("click", onClick);
-u.addEventListener("click", onClick);
-v.addEventListener("click", onClick);
-w.addEventListener("click", onClick);
-x.addEventListener("click", onClick);
-y.addEventListener("click", onClick);
-z.addEventListener("click", onClick);
